@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "DripLens",
+    "version": "1.0.0",
+    "icons": {
+        "32": "icon.png"
+    },
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "identity",
+        "tabs",
+        "scripting",
+        "storage",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "supabaseClient.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}
