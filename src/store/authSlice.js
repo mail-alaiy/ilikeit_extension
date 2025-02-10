@@ -5,6 +5,7 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     loading: false,
+    presignedUrl: null,
   },
   reducers: {
     setUser: (state, action) => {
@@ -18,8 +19,14 @@ const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setPresignedUrl: (state, action) => {
+      state.presignedUrl = action.payload;
+    },
+    clearPresignedUrl: (state) => {
+      state.presignedUrl = null;
+    },
   },
 });
 
-export const { setUser, clearUser, setLoading } = authSlice.actions;
+export const { setUser, clearUser, setLoading, setPresignedUrl, clearPresignedUrl } = authSlice.actions;
 export default authSlice.reducer;
