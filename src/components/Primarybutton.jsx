@@ -1,12 +1,12 @@
-const Primarybutton = ({ title, onClick, className }) => {
+const PrimaryButton = ({ title, onClick, className }) => {
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-black text-lg font-semibold text-white py-3 rounded-full border-2 border-black drop-shadow-md cursor-pointer transition-all hover:bg-gray-900 ${className}`}
+      className={` bg-green-600 text-lg font-semibold text-white py-2 rounded-lg border-2 border-green-700 shadow-[4px_4px_0px_black] cursor-pointer transition-all hover:bg-green-700 active:translate-y-1 active:shadow-[2px_2px_0px_black] ${className}`}
     >
       {title}
     </button>
   );
 };
 
-export default Primarybutton;
+export default PrimaryButton;

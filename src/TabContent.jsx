@@ -5,7 +5,11 @@ import ImageUploadPage from "./pages/TabFlow/ImageUploadPage";
 const TabContent = () => {
   const { user, loading } = useSelector((state) => state.auth); // Add loading state
 
-  return <div>{user ? <ImageUploadPage /> : <Login /> }</div>;
+  console.log(user);
+
+  return (
+    <div className="topcontainer">{user ? <ImageUploadPage /> : <Login />}</div>
+  );
 };
 
 export default TabContent;

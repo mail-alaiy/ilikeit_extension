@@ -1,6 +1,38 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Roboto+Mono:wght@400;700&display=swap');
 
+/* Apply 'Courier Prime' to all headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Courier Prime', monospace;
+}
+
+/* Apply 'Roboto Mono' to everything else */
+body {
+  font-family: 'Roboto Mono', monospace;
+}
+
+body {
+  @apply bg-gray-200
+}
+
+.divContainer {
+  @apply flex border-2 border-black rounded-xl py-2 bg-white shadow-[8px_8px_0px_black];
+}
 
 .container {
-  @apply w-full max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-12;
+  @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
 }
+
+.container2 {
+  @apply w-full max-w-[1200px];
+}
+
+.topcontainer {
+  @apply px-2 py-2
+}
+
+@import "tailwindcss";
