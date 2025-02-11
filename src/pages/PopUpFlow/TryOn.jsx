@@ -1,7 +1,7 @@
 import Container from "../../components/Container";
 import Header from "../../components/Header";
 import Primarybutton from "../../components/Primarybutton";
-import Carousel from "./Carousel";
+import Carousel from "../../components/Carousel";
 
 const TryOn = () => {
   const images = [
@@ -13,7 +13,7 @@ const TryOn = () => {
       <Header />
       <Container>
         <Carousel images={images} width="w-[300px]" height="h-[450px]" />
-        <Primarybutton title="Shop Now" />
+        {/* <Primarybutton title="Shop Now" /> */}
       </Container>
     </div>
   );
