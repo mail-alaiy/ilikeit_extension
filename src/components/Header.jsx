@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <div className="flex justify-center items-center">
       <div className="container divContainer py-4 flex justify-between items-center">
-        <h1 className="font-semibold text-2xl">I❤️It.ai</h1>
+        <h1 className="font-semibold text-xl sm:text-2xl">I❤️It.ai</h1>
         {user && (
           <div className="flex gap-4">
             <SecondaryButton

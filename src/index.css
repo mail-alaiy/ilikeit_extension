@@ -35,4 +35,23 @@ body {
   @apply px-2 py-2
 }
 
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 3px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @import "tailwindcss";

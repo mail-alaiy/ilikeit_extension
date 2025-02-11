@@ -1,14 +1,19 @@
 import SecondaryButton from "./SecondaryButton";
 import PrimaryButton from "./PrimaryButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setPresignedUrl } from "../store/authSlice";
 import { useDispatch } from "react-redux";
 
-const ImageUploadContainer = ({ image, rotation, handleImageUpload }) => {
+const ImageUploadContainer = ({
+  image,
+  storedImage,
+  rotation,
+  handleImageUpload,
+}) => {
   return (
     <div className="container divContainer flex-1 flex-col py-10">
       <div className="w-full h-80 border-2 border-dashed border-gray-300 rounded-md flex justify-center items-center">
-        {image ? (
+        {image || storedImage ? (
           <div
             className="relative w-full h-full flex justify-center items-center overflow-hidden"
             style={{
@@ -17,7 +22,7 @@ const ImageUploadContainer = ({ image, rotation, handleImageUpload }) => {
             }}
           >
             <img
-              src={image}
+              src={image ? image : storedImage}
               alt="Uploaded"
               className="object-contain max-w-full max-h-full"
             />
@@ -40,7 +45,13 @@ const ImageUploadContainer = ({ image, rotation, handleImageUpload }) => {
   );
 };
 
-const FormButtons = ({ image, handleRemove, handleSubmit }) => {
+const FormButtons = ({
+  image,
+  handleRemove,
+  storedImage,
+  handleSubmit,
+  loading,
+}) => {
   return (
     <div className="container divContainer flex-1 flex-col py-10">
       <div className="flex gap-5">
@@ -53,18 +64,41 @@ const FormButtons = ({ image, handleRemove, handleSubmit }) => {
         <PrimaryButton
           disabled={!image}
           onClick={handleSubmit} // Handle submit when button is clicked
-          title="Submit"
+          loading={loading}
+          title={storedImage ? "Submit Another" : "Submit"}
           className="flex-1 disabled:bg-gray-300"
         />
       </div>
     </div>
   );
 };
-
 const LeftPanel = () => {
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const [image, setImage] = useState(null);
+  const [storedImage, setStoredImage] = useState(null);
   const [rotation, setRotation] = useState(0);
+  const [loading, setLoading] = useState(false); // Add loading state
+
+  useEffect(() => {
+    chrome.storage.local.get("presignedUrl", (result) => {
+      if (result.presignedUrl) {
+        setStoredImage(result.presignedUrl);
+        console.log("Loaded image from storage:", result.presignedUrl);
+      }
+    });
+  }, []);
+
+  const dataURLtoFile = (dataUrl, filename) => {
+    const arr = dataUrl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -80,12 +114,20 @@ const LeftPanel = () => {
 
   const handleRemove = () => {
     setImage(null);
+    setStoredImage(null);
     setRotation(0);
+
+    // Remove the stored presigned URL from local storage
+    chrome.storage.local.remove("presignedUrl", () => {
+      console.log("Presigned URL removed from storage");
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!image) return;
+    if (!image || loading) return;
+
+    setLoading(true); // Start loading
 
     const file = dataURLtoFile(image, "uploaded_image.jpg");
     const apiUrl =
@@ -98,7 +140,7 @@ const LeftPanel = () => {
     try {
       const response = await fetch(apiUrl, {
         method: "POST",
-        body: formData, // Send the FormData object
+        body: formData,
       });
 
       const data = await response.json();
@@ -106,38 +148,34 @@ const LeftPanel = () => {
         const presignedUrl = data.presigned_url;
         dispatch(setPresignedUrl(presignedUrl));
         chrome.storage.local.set({ presignedUrl: presignedUrl });
+        setStoredImage(presignedUrl);
         console.log("Presigned URL:", presignedUrl);
-        // You can do something with the presigned URL here
       } else {
         console.error("Error uploading image:", data.message);
       }
     } catch (error) {
       console.error("Error during the request:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
-  };
-
-  // Helper function to convert the base64 data URL to a file
-  const dataURLtoFile = (dataUrl, filename) => {
-    const arr = dataUrl.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
   };
 
   return (
-    <form className="flex-1 flex flex-col gap-4">
+    <div className="flex-1 flex flex-col gap-4">
       <ImageUploadContainer
+        storedImage={storedImage}
         image={image}
         rotation={rotation}
         handleImageUpload={handleImageUpload}
       />
-      <FormButtons image={image} handleRemove={handleRemove} handleSubmit={handleSubmit} />
-    </form>
+      <FormButtons
+        image={image}
+        storedImage={storedImage}
+        handleRemove={handleRemove}
+        handleSubmit={handleSubmit}
+        loading={loading}
+      />
+    </div>
   );
 };
 

@@ -10,6 +10,7 @@ export default defineConfig({
         popup: "index.html", // Popup flow
         tab: "tab.html", // New tab flow
         background: "src/background.js", // Should be shown in dist
+        content: "src/content.js", // Should be shown in dist
       },
       output: {
         entryFileNames: "[name].js",

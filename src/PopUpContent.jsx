@@ -6,7 +6,7 @@ const PopUpContent = () => {
   const { user, loading } = useSelector((state) => state.auth); // Add loading state
 
   return (
-    <div className="min-w-[400px] min-h-[600px]">
+    <div className="min-w-[400px] min-h-[600px] py-2 px-2">
       <div>{user ? <TryOn /> : <Login />}</div>;
     </div>
   );

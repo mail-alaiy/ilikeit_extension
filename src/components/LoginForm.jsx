@@ -17,7 +17,7 @@ const InputField = ({
   };
 
   const handleInput = (e) => {
-    e.target.setCustomValidity(''); // Clear the error message when user starts typing again
+    e.target.setCustomValidity(""); // Clear the error message when user starts typing again
   };
   return (
     <div className="w-full">
@@ -65,38 +65,40 @@ const LoginForm = () => {
   };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="container divContainer my-6 flex-col items-start"
-    >
-      <h2 className="text-2xl font-semibold">Login</h2>
-      <InputField
-        type="text"
-        name="firstName"
-        placeholder="First Name"
-        pattern="^[A-Za-z]{2,30}$"
-        errorMessage="First name should only contain letters (2-30 characters)."
-      />
-      <InputField
-        type="email"
-        name="email"
-        placeholder="Email"
-        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-        errorMessage="Enter a valid email address."
-      />
-      <InputField
-        type="password"
-        name="password"
-        placeholder="Password"
-        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-        errorMessage="Password must be at least 6 characters and contain letters and numbers."
-      />
-      <div className="flex w-full gap-5 mb-2">
-        <PrimaryButton title="Login" className="mt-4 flex-1" type="submit" />
-        <SecondaryButton title="Reset" className="mt-4 flex-1" type="reset" />
-      </div>
-    </form>
+    <div className="container divContainer my-6 flex items-center flex-col justify-center">
+      <h2 className="text-2xl font-semibold">login</h2>
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="w-full md:w-[33%] flex flex-col gap-4"
+      >
+        <InputField
+          type="text"
+          name="firstName"
+          placeholder="first name"
+          pattern="^[A-Za-z]{2,30}$"
+          errorMessage="First name should only contain letters (2-30 characters) without any spaces."
+        />
+        <InputField
+          type="email"
+          name="email"
+          placeholder="email"
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+          errorMessage="Enter a valid email address"
+        />
+        <InputField
+          type="password"
+          name="password"
+          placeholder="password"
+          pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
+          errorMessage="Password must be at least 6 characters with both letters and numbers."
+        />
+        <div className="flex w-full gap-5 mb-2">
+          <PrimaryButton title="login" className="mt-4 flex-1" type="submit" />
+          <SecondaryButton title="reset" className="mt-4 flex-1" type="reset" />
+        </div>
+      </form>
+    </div>
   );
 };
 
