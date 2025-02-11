@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -22,6 +22,7 @@ const CustomNextArrow = ({ onClick }) => (
 );
 
 const Carousel = ({ images, width, height }) => {
+
   const settings = {
     dots: true,
     infinite: true,
@@ -38,17 +39,23 @@ const Carousel = ({ images, width, height }) => {
 
   return (
     <div className={`relative mx-auto ${width} ${height} overflow-hidden rounded-xl shadow-lg`}>
-      <Slider {...settings}>
-        {images.map((image, index) => (
-          <div key={index} className="flex justify-center overflow-hidden rounded-xl">
-            <img
-              src={image}
-              alt={`Slide ${index + 1}`}
-              className="w-full max-w-[450px] h-[500px] object-cover rounded-xl"
-            />
-          </div>
-        ))}
-      </Slider>
+     {images.length === 0 ? (
+        <div className="flex justify-center items-center w-full h-full bg-gray-100 text-xl font-semibold text-red-500 rounded-lg shadow-md p-6">
+        Start trying on!
+      </div>      
+      ) : (
+        <Slider {...settings}>
+          {images.map((image, index) => (
+            <div key={index} className="flex justify-center overflow-hidden rounded-xl">
+              <img
+                src={image}
+                alt={`Slide ${index + 1}`}
+                className="w-full max-w-[450px] h-[500px] object-cover rounded-xl"
+              />
+            </div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };
