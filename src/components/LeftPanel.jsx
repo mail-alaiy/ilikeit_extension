@@ -63,7 +63,7 @@ const FormButtons = ({
         />
         <PrimaryButton
           disabled={!image}
-          onClick={handleSubmit} // Handle submit when button is clicked
+          onClick={handleSubmit}
           loading={loading}
           title={storedImage ? "Submit Another" : "Submit"}
           className="flex-1 disabled:bg-gray-300"
@@ -173,7 +173,7 @@ const LeftPanel = () => {
     } catch (error) {
       console.error("Error during the request:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
