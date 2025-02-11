@@ -11,6 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ success: true });
   }
   if (message.action === "tryOnImage") {
+    console.log("Call made to background for inferencing")
     addToQueue(message.imageUrl, message.userImageUrl);
     sendResponse({success: true});
   }
@@ -18,12 +19,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const addToQueue = (imageUrl, userImageUrl) => {
   requestQueue.push({ imageUrl, userImageUrl });
+  console.log("Pushed the items to the queue");
   processQueue();
 };
 
 const processQueue = async () => {
+  console.log(`is Processing variable state: ${isProcessing}`);
   if (isProcessing || requestQueue.length == 0) return;
   isProcessing = true;
+  console.log(`After setting it true: ${isProcessing}`);
   const { imageUrl, userImageUrl } = requestQueue.shift();
   
   try {
@@ -38,10 +42,10 @@ const processQueue = async () => {
         body: JSON.stringify({ imageUrl, userImageUrl }),
       }
     );
+    console.log("Request sent")
     if (!response.ok) {
       throw new Error(`HTTP Error: ${response.status}`);
     }
-    
     const result = await response.json();
     console.log("API response Result:", result);
     storeResponse(result);
