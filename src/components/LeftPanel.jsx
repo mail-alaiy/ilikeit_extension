@@ -77,7 +77,9 @@ const LeftPanel = () => {
   const [image, setImage] = useState(null);
   const [storedImage, setStoredImage] = useState(null);
   const [rotation, setRotation] = useState(0);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   useEffect(() => {
     chrome.storage.local.get("presignedUrl", (result) => {
@@ -112,7 +114,17 @@ const LeftPanel = () => {
     }
   };
 
+  const showError = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(""), 2000); // Clear error after 2 seconds
+  };
+
   const handleRemove = () => {
+    if(!image)
+    {
+      showError("No image to remove!");
+      return;
+    }
     setImage(null);
     setStoredImage(null);
     setRotation(0);
@@ -125,6 +137,11 @@ const LeftPanel = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!image) {
+      showError("Please upload an image before submitting!");
+      return;
+    }
+
     if (!image || loading) return;
 
     setLoading(true); // Start loading
@@ -162,6 +179,9 @@ const LeftPanel = () => {
 
   return (
     <div className="flex-1 flex flex-col gap-4">
+      {errorMessage && (
+        <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+      )}
       <ImageUploadContainer
         storedImage={storedImage}
         image={image}
