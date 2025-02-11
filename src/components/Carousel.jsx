@@ -22,7 +22,6 @@ const CustomNextArrow = ({ onClick }) => (
 );
 
 const Carousel = ({ images, width, height }) => {
-
   const settings = {
     dots: true,
     infinite: true,
@@ -37,16 +36,21 @@ const Carousel = ({ images, width, height }) => {
     fade: true,
   };
 
+  console.log(
+    `try: ${!images} ${images.length} ${images && images.length === 0}`
+  );
+
   return (
-    <div className={`relative mx-auto ${width} ${height} overflow-hidden rounded-xl shadow-lg`}>
-     {images.length === 0 ? (
-        <div className="flex justify-center items-center w-full h-full bg-gray-100 text-xl font-semibold text-red-500 rounded-lg shadow-md p-6">
-        Start trying on!
-      </div>      
-      ) : (
+    <div
+      className={`relative mx-auto ${width} ${height} overflow-hidden rounded-xl shadow-lg`}
+    >
+      {images && images.length !== 0 ? (
         <Slider {...settings}>
           {images.map((image, index) => (
-            <div key={index} className="flex justify-center overflow-hidden rounded-xl">
+            <div
+              key={index}
+              className="flex justify-center overflow-hidden rounded-xl"
+            >
               <img
                 src={image}
                 alt={`Slide ${index + 1}`}
@@ -55,6 +59,10 @@ const Carousel = ({ images, width, height }) => {
             </div>
           ))}
         </Slider>
+      ) : (
+        <div className="flex justify-center items-center w-full h-full bg-gray-100 text-xl font-semibold text-red-500 rounded-lg shadow-md p-6">
+          Start trying on!
+        </div>
       )}
     </div>
   );

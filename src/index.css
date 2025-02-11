@@ -32,7 +32,7 @@ body {
 }
 
 .topcontainer {
-  @apply px-2 py-2
+  @apply px-2 py-2;
 }
 
 .loader {

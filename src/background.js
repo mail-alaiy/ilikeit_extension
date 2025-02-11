@@ -11,9 +11,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ success: true });
   }
   if (message.action === "tryOnImage") {
-    console.log("Call made to background for inferencing")
+    console.log("Call made to background for inferencing");
     addToQueue(message.imageUrl, message.userImageUrl);
-    sendResponse({success: true});
+    sendResponse({ success: true });
   }
 });
 
@@ -29,7 +29,7 @@ const processQueue = async () => {
   isProcessing = true;
   console.log(`After setting it true: ${isProcessing}`);
   const { imageUrl, userImageUrl } = requestQueue.shift();
-  
+
   try {
     const response = await fetch(
       "https://p35jn4hjb6.execute-api.us-east-1.amazonaws.com/version-1/send-to-inference",
@@ -42,7 +42,6 @@ const processQueue = async () => {
         body: JSON.stringify({ imageUrl, userImageUrl }),
       }
     );
-    console.log("Request sent")
     if (!response.ok) {
       throw new Error(`HTTP Error: ${response.status}`);
     }
@@ -68,4 +67,3 @@ const storeResponse = async (result) => {
     });
   });
 };
-

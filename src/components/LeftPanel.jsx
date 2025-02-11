@@ -3,6 +3,7 @@ import PrimaryButton from "./PrimaryButton";
 import { useEffect, useState } from "react";
 import { setPresignedUrl } from "../store/authSlice";
 import { useDispatch } from "react-redux";
+import Modal from "./Modal";
 
 const ImageUploadContainer = ({
   image,
@@ -65,13 +66,26 @@ const FormButtons = ({
           disabled={!image}
           onClick={handleSubmit}
           loading={loading}
-          title={storedImage ? "Submit Another" : "Submit"}
+          title={storedImage ? "Image Submitted" : "Submit"}
           className="flex-1 disabled:bg-gray-300"
         />
       </div>
     </div>
   );
 };
+
+const dataURLtoFile = (dataUrl, filename) => {
+  const arr = dataUrl.split(",");
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+};
+
 const LeftPanel = () => {
   const dispatch = useDispatch();
   const [image, setImage] = useState(null);
@@ -79,7 +93,7 @@ const LeftPanel = () => {
   const [rotation, setRotation] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     chrome.storage.local.get("presignedUrl", (result) => {
@@ -89,18 +103,6 @@ const LeftPanel = () => {
       }
     });
   }, []);
-
-  const dataURLtoFile = (dataUrl, filename) => {
-    const arr = dataUrl.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -120,8 +122,7 @@ const LeftPanel = () => {
   };
 
   const handleRemove = () => {
-    if(!image)
-    {
+    if (!image && !storedImage) {
       showError("No image to remove!");
       return;
     }
@@ -166,7 +167,10 @@ const LeftPanel = () => {
         dispatch(setPresignedUrl(presignedUrl));
         chrome.storage.local.set({ presignedUrl: presignedUrl });
         setStoredImage(presignedUrl);
-        console.log("Presigned URL:", presignedUrl);
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+        }, 5000);
       } else {
         console.error("Error uploading image:", data.message);
       }
@@ -179,6 +183,7 @@ const LeftPanel = () => {
 
   return (
     <div className="flex-1 flex flex-col gap-4">
+      {showModal && <Modal onClose={() => setShowModal(false)} />}
       {errorMessage && (
         <div className="text-red-500 text-sm text-center">{errorMessage}</div>
       )}

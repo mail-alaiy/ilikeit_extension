@@ -32,8 +32,8 @@ const TryOn = () => {
     <div>
       <Header />
       <Container>
-      <Carousel images={images} width="w-[300px]" height="h-[450px]" />
-      {/* <Primarybutton title="Shop Now" /> */}
+        <Carousel images={images} width="w-[300px]" height="h-[450px]" />
+        {/* <Primarybutton title="Shop Now" /> */}
       </Container>
     </div>
   );
