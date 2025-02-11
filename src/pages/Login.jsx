@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Header from "../components/Header";
 import Loader from "../components/Loader"; // Import Loader
-import VideoPlayer from "../components/VideoPlayer";
+import ImageDisplay from "../components/ImageDisplay";
 import LoginForm from "../components/LoginForm";
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
       <Header />
       <div className="flex justify-center items-center flex-col py-6 px-2">
         {/* Responsive Video Wrapper */}
-        <VideoPlayer />
+        <ImageDisplay />
         {/* Sign-in Button */}
         {/* {!user && (
           <button
