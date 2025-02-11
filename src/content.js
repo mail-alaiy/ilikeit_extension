@@ -3,8 +3,6 @@ let isProcessing = false;
 
 const enableImageHoverButton = () => {
   let currentElement = null;
-
-  // Create a floating button
   const hoverButton = document.createElement("button");
   hoverButton.innerText = "Try On";
   Object.assign(hoverButton.style, {
@@ -17,7 +15,7 @@ const enableImageHoverButton = () => {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     cursor: "pointer",
     zIndex: "9999",
-    display: "none", // Initially hidden
+    display: "none",
     pointerEvents: "auto",
   });
   document.body.appendChild(hoverButton);
@@ -125,13 +123,8 @@ const sendRequest = async (userImageUrl, imageUrl) => {
     console.log("Request processed successfully:", result);
 
     const STORAGE_KEY = "responseList";
-
-    // Store result in Chrome local storage
     chrome.storage.local.get([STORAGE_KEY], (items) => {
-      const responseList = items[STORAGE_KEY] || []; // Default to an empty array if no previous responses
-      responseList.push(result); // Append the new response
-
-      // Store updated response list
+      const responseList = items[STORAGE_KEY] || [];
       chrome.storage.local.set({ [STORAGE_KEY]: responseList }, () => {
         console.log("Response added to storage:", responseList);
       });
@@ -150,4 +143,38 @@ const addToQueue = (userImageUrl, imageUrl, callback) => {
   processQueue();
 };
 
+const virtualTryOn = () => {
+  chrome.runtime.sendMessage({action: "openPopup"}, (response)=>{
+    if(chrome.runtime.lastError){
+      console.error("Error sending message to background.js: ", chrome.runtime.lastError);
+    }
+    else{
+      console.log("Popup open request sent successfully:", response);
+    }
+  })
+}
+
+const addVirtualTryOnButton = ()=>{
+  const vtButton = document.createElement("button");
+  vtButton.innerText = "VT";
+  Object.assign(vtButton.style, {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    padding: "10px 15px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "50%",
+    fontSize: "16px",
+    fontWeight: "bold",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    cursor: "pointer",
+    zIndex: "9999",
+  });
+  vtButton.onclick = virtualTryOn;
+  document.body.appendChild(vtButton);
+};
+
+addVirtualTryOnButton();
 enableImageHoverButton();

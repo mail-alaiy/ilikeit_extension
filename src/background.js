@@ -3,6 +3,10 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "openPopup") {
+    chrome.action.openPopup();
+    sendResponse({ success: true });
+  }
   if (message.action === "tryOnImage") {
     fetch(
       "https://p35jn4hjb6.execute-api.us-east-1.amazonaws.com/version-1/send-to-inference",
