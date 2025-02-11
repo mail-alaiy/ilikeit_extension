@@ -1,6 +1,3 @@
-const requestQueue = [];
-let isProcessing = false;
-
 const enableImageHoverButton = () => {
   let currentElement = null;
   const hoverButton = document.createElement("button");
@@ -58,10 +55,17 @@ const enableImageHoverButton = () => {
             console.log("image not found");
             return;
           }
-
-          addToQueue(userImageUrl, imageUrl, () =>
-            console.log("Request successfully handled")
-          );
+          chrome.runtime.sendMessage({
+            action: "tryOnImage", userImageUrl, imageUrl
+          },
+          (response)=>{
+            if(chrome.runtime.lastError){
+              console.log("Error sending message to background.js: ", chrome.runtime.lastError);
+            }
+            else{
+              console.log("Request sent to background.js");
+            }
+          })
         });
       };
     }
@@ -75,72 +79,6 @@ const enableImageHoverButton = () => {
       hoverButton.style.display = "none";
     }
   });
-};
-
-const processQueue = async () => {
-  if (isProcessing || requestQueue.length === 0) return;
-  isProcessing = true;
-
-  const { userImageUrl, imageUrl, callback } = requestQueue.shift();
-  try {
-    console.log("Sending request:", { userImageUrl, imageUrl });
-    await sendRequest(userImageUrl, imageUrl);
-    console.log("Request complete");
-    if (callback) callback();
-  } catch (error) {
-    console.error("Request failed:", error);
-  } finally {
-    isProcessing = false;
-    if (requestQueue.length > 0) processQueue();
-  }
-};
-
-const sendRequest = async (userImageUrl, imageUrl) => {
-  const apiUrl =
-    "https://p35jn4hjb6.execute-api.us-east-1.amazonaws.com/version-1/send-to-inference";
-
-  const payload = {
-    imageUrl,
-    userImageUrl,
-  };
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Accept: "*/*",
-        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("Request processed successfully:", result);
-
-    const STORAGE_KEY = "responseList";
-    chrome.storage.local.get([STORAGE_KEY], (items) => {
-      const responseList = items[STORAGE_KEY] || [];
-      chrome.storage.local.set({ [STORAGE_KEY]: responseList }, () => {
-        console.log("Response added to storage:", responseList);
-      });
-    });
-
-    return result;
-  } catch (error) {
-    console.error("Error during request:", error);
-    throw error;
-  }
-};
-
-const addToQueue = (userImageUrl, imageUrl, callback) => {
-  console.log("hi");
-  requestQueue.push({ userImageUrl, imageUrl, callback });
-  processQueue();
 };
 
 const virtualTryOn = () => {
