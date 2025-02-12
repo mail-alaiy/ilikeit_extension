@@ -144,19 +144,22 @@ const virtualTryOn = () => {
 
 const addVirtualTryOnButton = () => {
   const vtButton = document.createElement("button");
-  vtButton.innerText = "💙"; // Blue heart emoji in center
+  const hearts = ["💙", "💚", "💛", "❤️", "🖤"];
+  let currentIndex = 0;
+
+  vtButton.innerText = hearts[currentIndex];
 
   Object.assign(vtButton.style, {
     position: "fixed",
     bottom: "20px",
     right: "20px",
-    width: "50px", // Ensures it's a perfect circle
+    width: "50px",
     height: "50px",
-    backgroundColor: "#dc2626", // Red button (Tailwind's red-600)
+    backgroundColor: "#fff",
     color: "#fff",
-    border: "2px solid #b91c1c", // Darker red border (Tailwind's red-700)
-    borderRadius: "50%", // Circular button
-    fontSize: "24px", // Large enough for emoji
+    border: "2px solid #fff",
+    borderRadius: "50%",
+    fontSize: "24px",
     fontWeight: "bold",
     display: "flex",
     alignItems: "center",
@@ -167,13 +170,19 @@ const addVirtualTryOnButton = () => {
     zIndex: "9999",
   });
 
+  // Heart animation
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % hearts.length;
+    vtButton.innerText = hearts[currentIndex];
+  }, 500); // Change heart every 500ms
+
   // Hover effect (darker red)
   vtButton.addEventListener("mouseover", () => {
-    vtButton.style.backgroundColor = "#b91c1c"; // Darker red on hover
+    vtButton.style.backgroundColor = "#b91c1c";
   });
 
   vtButton.addEventListener("mouseout", () => {
-    vtButton.style.backgroundColor = "#dc2626"; // Original red
+    vtButton.style.backgroundColor = "#ffffff";
   });
 
   // Active (click) effect
@@ -190,6 +199,8 @@ const addVirtualTryOnButton = () => {
   vtButton.onclick = virtualTryOn;
   document.body.appendChild(vtButton);
 };
+
+addVirtualTryOnButton();
 
 addVirtualTryOnButton();
 enableImageHoverButton();
