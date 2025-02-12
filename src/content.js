@@ -94,7 +94,7 @@ const enableImageHoverButton = () => {
           const userImageUrl = items.presignedUrl;
           console.log(userImageUrl);
           if (!userImageUrl) {
-            console.log("image not found");
+            console.log("Upload user Image");
             return;
           }
           chrome.runtime.sendMessage(

@@ -65,7 +65,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="container divContainer my-6 flex items-center flex-col justify-center">
+    <div className="container divContainer mt-6 flex items-center flex-col justify-center">
       <h2 className="text-2xl font-semibold">login</h2>
       <form
         ref={formRef}

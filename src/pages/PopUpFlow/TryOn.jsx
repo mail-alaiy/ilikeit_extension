@@ -5,26 +5,34 @@ import { useState, useEffect } from "react";
 
 const TryOn = () => {
   const [images, setImages] = useState([]);
+  const [presignedUrl, setPresignedUrl] = useState(""); // State for presigned URL
 
   useEffect(() => {
-    const fetchImages = () => {
-      chrome.storage.local.get("responseList", (items) => {
+    const fetchData = () => {
+      chrome.storage.local.get(["responseList", "presignedUrl"], (items) => {
         const responseList = items.responseList || [];
         const imageUrls = responseList.map((response) => response.result_url);
         setImages(imageUrls);
+
+        if (items.presignedUrl) {
+          setPresignedUrl(items.presignedUrl); // Update presigned URL state
+        }
       });
     };
 
-    fetchImages();
+    fetchData();
 
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === "local" && changes.responseList) {
-        fetchImages();
+      if (
+        areaName === "local" &&
+        (changes.responseList || changes.presignedUrl)
+      ) {
+        fetchData();
       }
     });
 
     return () => {
-      chrome.storage.onChanged.removeListener(fetchImages);
+      chrome.storage.onChanged.removeListener(fetchData);
     };
   }, []);
 
@@ -32,8 +40,12 @@ const TryOn = () => {
     <div>
       <Header />
       <Container>
-        <Carousel images={images} width="w-[300px]" height="h-[450px]" />
-        {/* <Primarybutton title="Shop Now" /> */}
+        <Carousel
+          presignedUrl={presignedUrl}
+          images={images}
+          width="w-[300px]"
+          height="h-[450px]"
+        />
       </Container>
     </div>
   );
