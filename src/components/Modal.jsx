@@ -2,12 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircleIcon } from "@heroicons/react/solid"; // Heroicons for the tick icon
 import PrimaryButton from "./PrimaryButton";
-
-const Overlay = () => {
-  return (
-    <div className="fixed inset-0 bg-gray-900 opacity-50 flex items-center justify-center z-10"></div>
-  );
-};
+import Overlay from "./Overlay";
 
 const Modal = ({ onClose }) => {
   return (

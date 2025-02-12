@@ -1,25 +1,8 @@
-import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-const CustomPrevArrow = ({ onClick }) => (
-  <button
-    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-2 rounded-full shadow-lg z-10 hover:bg-opacity-80 transition-all duration-300"
-    onClick={onClick}
-  >
-    ❮
-  </button>
-);
-
-const CustomNextArrow = ({ onClick }) => (
-  <button
-    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-3 py-2 rounded-full shadow-lg z-10 hover:bg-opacity-80 transition-all duration-300"
-    onClick={onClick}
-  >
-    ❯
-  </button>
-);
+import CustomPrevArrow from "./CustomPrevArrow";
+import CustomNextArrow from "./CustomNextArrow";
 
 const Carousel = ({ images, presignedUrl, width, height }) => {
   const settings = {
